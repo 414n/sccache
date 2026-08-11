@@ -37,7 +37,7 @@ jobs:
       - name: Offline build test with vendored sources (--frozen option)
         working-directory: ${{ env.SRCDIR }}
         run: |
-          cargo build --release --frozen
+          CARGO_HOME="$(mktemp -d)" cargo build --release --frozen
 
       - name: Create tarball
         run: |
