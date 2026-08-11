@@ -8,7 +8,7 @@ on:
   workflow_dispatch: # optional: lets you run it manually to test
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   vendor-and-archive:
@@ -40,6 +40,8 @@ jobs:
 
       - name: Upload tarball to the release
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: ../sccache-source-${{ github.event.release.tag_name }}.tar.gz
