@@ -1,0 +1,58 @@
+# Create a release source archive that is fully vendored so the consumer can build offline.
+# Triggers on published releases and can also be run manually for testing.
+name: Create vendored source archive
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch: # optional: lets you run it manually to test
+
+permissions:
+  contents: read
+
+jobs:
+  vendor-and-archive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+
+      - name: Install cargo-vendor
+        run: cargo install cargo-vendor --locked
+
+      - name: Create vendor directory and .cargo config
+        run: |
+          # create vendor tree and write a .cargo/config.toml that routes crates.io to the vendored sources
+          cargo vendor vendor
+          mkdir -p .cargo
+          cargo vendor > .cargo/config.toml
+
+      - name: (Optional) Verify build uses vendored sources
+        run: |
+          # This builds once to catch obvious packaging issues. With .cargo/config.toml + vendor/
+          # cargo should not go to the network.
+          cargo build --release
+
+      - name: Create tarball
+        run: |
+          TAG=${{ github.event.release.tag_name }}
+          TAR="sccache-source-${TAG}.tar.gz"
+          # exclude git metadata and CI artifacts
+          tar --exclude='.git' --exclude='target' --exclude='.github/actions' -czf "$TAR" .
+          echo "TAR=$TAR" >> $GITHUB_OUTPUT
+
+      - name: Upload tarball to the release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./sccache-source-${{ github.event.release.tag_name }}.tar.gz
+          asset_name: sccache-source-${{ github.event.release.tag_name }}.tar.gz
+          asset_content_type: application/gzip
