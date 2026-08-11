@@ -21,13 +21,13 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@stable
 
-      - name: Install cargo-vendor
-        run: cargo install cargo-vendor --locked
+      # - name: Install cargo-vendor
+      #   run: cargo install cargo-vendor --locked
 
       - name: Create vendor directory and .cargo config
         run: |
           # create vendor tree and write a .cargo/config.toml that routes crates.io to the vendored sources
-          cargo vendor vendor
+          # cargo vendor vendor
           mkdir -p .cargo
           cargo vendor > .cargo/config.toml
 
