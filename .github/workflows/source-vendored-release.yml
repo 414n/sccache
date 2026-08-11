@@ -19,11 +19,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Rust toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          profile: minimal
+      - uses: dtolnay/rust-toolchain@stable
 
       - name: Install cargo-vendor
         run: cargo install cargo-vendor --locked
