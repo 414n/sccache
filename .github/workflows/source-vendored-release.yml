@@ -47,7 +47,7 @@ jobs:
           cd test_build
           tar xf "../${{ env.TAR }}"
           cd "${{ env.SRCDIR }}"
-          CARGO_HOME="$(mktemp -d)" cargo build --release --frozen
+          CARGO_HOME="$(mktemp -d)" cargo build --release --frozen --features all
 
       - name: Upload tarball to the release
         uses: actions/upload-release-asset@v1
