@@ -33,15 +33,21 @@ jobs:
           mkdir -p .cargo
           cargo vendor > .cargo/config.toml
 
-      - name: Offline build test with vendored sources (--frozen option)
-        working-directory: ${{ env.SRCDIR }}
-        run: |
-          CARGO_HOME="$(mktemp -d)" cargo build --release --frozen
-
       - name: Create tarball
         run: |
-          tar --exclude="${{ env.SRCDIR }}/.git" --exclude="${{ env.SRCDIR }}/target" -cJvf "${{ env.TAR }}" "${{ env.SRCDIR }}"
+          tar --exclude="${{ env.SRCDIR }}/.git" \
+            --exclude="${{ env.SRCDIR }}/target" \
+            -cJvf "${{ env.TAR }}" \
+            "${{ env.SRCDIR }}"
           echo "TAR=${{ env.TAR }}" >> $GITHUB_OUTPUT
+
+      - name: Test offline build with vendored source tarball (--frozen option)
+        run: |
+          mkdir test_build
+          cd test_build
+          tar xf "../${{ env.TAR }}"
+          cd "${{ env.SRCDIR }}"
+          CARGO_HOME="$(mktemp -d)" cargo build --release --frozen
 
       - name: Upload tarball to the release
         uses: actions/upload-release-asset@v1
