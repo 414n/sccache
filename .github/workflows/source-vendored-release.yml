@@ -40,7 +40,7 @@ jobs:
 
       - name: Create tarball
         run: |
-          tar --exclude='.git' --exclude='target' -cJvf "${{ env.TAR }}" "${{ env.SRCDIR }}"
+          tar --exclude="${{ env.SRCDIR }}/.git" --exclude="${{ env.SRCDIR }}/target" -cJvf "${{ env.TAR }}" "${{ env.SRCDIR }}"
           echo "TAR=${{ env.TAR }}" >> $GITHUB_OUTPUT
 
       - name: Upload tarball to the release
