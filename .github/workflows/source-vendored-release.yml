@@ -40,8 +40,7 @@ jobs:
 
       - name: Create tarball
         run: |
-          # exclude git metadata and CI artifacts
-          tar --exclude='.git' --exclude='target' --exclude='.github/actions' -czf "${{ env.TAR }}" "${{ env.SRCDIR }}"
+          tar --exclude-vcs --exclude-vcs-ignore -czvf "${{ env.TAR }}" "${{ env.SRCDIR }}"
           echo "TAR=${{ env.TAR }}" >> $GITHUB_OUTPUT
 
       - name: Upload tarball to the release
