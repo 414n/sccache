@@ -42,7 +42,7 @@ jobs:
       - name: Create tarball
         run: |
           tar --exclude-vcs --exclude-vcs-ignore -cvf "${{ env.TAR }}" "${{ env.SRCDIR }}"
-          tar -uvf "${{ env.TAR }}" .cargo
+          tar -uvf "${{ env.TAR }}" "${{ env.SRCDIR }}"/.cargo
           xz -9ev "${{ env.TAR }}"
           echo "TAR_XZ=${{ env.TAR_XZ }}" >> $GITHUB_OUTPUT
 
