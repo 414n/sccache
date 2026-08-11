@@ -13,7 +13,7 @@ permissions:
 env:
   TAG: ${{ github.event.release.tag_name }}
   SRCDIR: sccache-${{ env.TAG }}
-  TAR: sccache-source-${{ env.TAG }}.tar.gz"
+  TAR: sccache-source-${{ env.TAG }}.tar.gz
 
 jobs:
   vendor-and-archive:
