@@ -263,6 +263,14 @@ rustup component add llvm-tools
 
 **Packagers are encouraged to build sccache with PGO too.** See [docs/PGO.md](docs/PGO.md) for the options, and for how to plug the profile into an existing packaging recipe.
 
+### Building from vendored source archive
+
+If you download a vendored source archive from the Releases (`sccache-source-XYZ.tar.xz`) you can build them completely offline by using the `--frozen` option with cargo build:
+
+```bash
+cargo build --frozen ...
+```
+
 ### Building portable binaries
 
 When building with the `dist-server` feature, `sccache` will depend on OpenSSL, which can be an annoyance if you want to distribute portable binaries. It is possible to statically link against OpenSSL using the `openssl/vendored` feature.
