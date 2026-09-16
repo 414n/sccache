@@ -29,6 +29,7 @@ jobs:
         with:
           fetch-depth: 0
           path: ${{ env.SRCDIR }}
+          ref: ${{ env.TAG }}
 
       - uses: dtolnay/rust-toolchain@stable
 
