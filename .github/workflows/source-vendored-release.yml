@@ -44,8 +44,7 @@ jobs:
           tar --exclude="${{ env.SRCDIR }}/.git" \
             --exclude="${{ env.SRCDIR }}/target" \
             -cJvf "${{ env.TAR }}" \
-            "${{ env.SRCDIR }}"
-          echo "TAR=${{ env.TAR }}" >> $GITHUB_OUTPUT
+            "${{ env.SRCDIR }}" || { echo "Failed to create tarball"; exit 1; }
 
       - name: Test offline build with vendored source tarball (--frozen option)
         run: |
