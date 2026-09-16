@@ -48,11 +48,18 @@ jobs:
 
       - name: Test offline build with vendored source tarball (--frozen option)
         run: |
-          mkdir test_build
-          cd test_build
-          tar xf "../${{ env.TAR }}"
+          tmpdir=$(mktemp -d)
+          srcdir="$tmpdir/src"
+          build1dir="$tmpdir/build1"
+          build2dir="$tmpdir/build2"
+          trap 'rm -rf $tmpdir' EXIT
+          mkdir -p "$srcdir" "$build1dir" "$build2dir"
+          cd "$srcdir"
+          tar xf "${{ github.workspace }}/${{ env.TAR }}"
           cd "${{ env.SRCDIR }}"
-          CARGO_HOME="$(mktemp -d)" cargo build --release --frozen --features all
+          CARGO_HOME="$build1dir" cargo build --release --frozen --features all
+          # Also test dist-server feature specifically (if not in 'all')
+          CARGO_HOME="$build2dir" cargo build --release --frozen --no-default-features --features dist-server
 
       - name: Upload tarball to the release
         if: github.event_name == 'release'
