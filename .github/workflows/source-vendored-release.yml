@@ -6,14 +6,19 @@ on:
   release:
     types: [published]
   workflow_dispatch: # optional: lets you run it manually to test
+    inputs:
+      tag_name:
+        description: 'Release tag to create archive for'
+        required: true
+        type: string
 
 permissions:
   contents: write
 
 env:
-  TAG: ${{ github.event.release.tag_name }}
-  SRCDIR: sccache-${{ github.event.release.tag_name }}
-  TAR: sccache-source-${{ github.event.release.tag_name }}.tar.xz
+  TAG: ${{ github.event.release.tag_name || github.event.inputs.tag_name}}
+  SRCDIR: sccache-${{ github.event.release.tag_name || github.event.inputs.tag_name }}
+  TAR: sccache-source-${{ github.event.release.tag_name || github.event.inputs.tag_name}}.tar.xz
 
 jobs:
   vendor-and-archive:
@@ -50,6 +55,7 @@ jobs:
           CARGO_HOME="$(mktemp -d)" cargo build --release --frozen --features all
 
       - name: Upload tarball to the release
+        if: github.event_name == 'release'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
