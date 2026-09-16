@@ -1,6 +1,6 @@
 # Create a release source archive that is fully vendored so the consumer can build offline.
 # Triggers on published releases and can also be run manually for testing.
-name: Create vendored source archive
+name: vendored-source-archive
 
 on:
   release:
