@@ -251,6 +251,14 @@ The list of features can be found in the `Cargo.toml` file, `[features]` section
 
 By default, `sccache` builds with support for all storage backends, but individual backends may be disabled by resetting the list of features and enabling all the other backends. Refer the [Cargo Documentation](http://doc.crates.io/manifest.html#the-features-section) for details on how to select features with Cargo.
 
+### Building from vendored source archive
+
+If you download a vendored source archive from the Releases (`sccache-source-XYZ.tar.xz`) you can build them completely offline by using the `--frozen` option with cargo build:
+
+```bash
+cargo build --frozen ...
+```
+
 ### Building portable binaries
 
 When building with the `dist-server` feature, `sccache` will depend on OpenSSL, which can be an annoyance if you want to distribute portable binaries. It is possible to statically link against OpenSSL using the `openssl/vendored` feature.
