@@ -54,9 +54,8 @@ jobs:
           build2dir="$tmpdir/build2"
           trap 'rm -rf $tmpdir' EXIT
           mkdir -p "$srcdir" "$build1dir" "$build2dir"
-          cd "$srcdir"
-          tar xf "${{ github.workspace }}/${{ env.TAR }}"
-          cd "${{ env.SRCDIR }}"
+          tar -xf "${{ github.workspace }}/${{ env.TAR }}" -C "$srcdir"
+          cd "$srcdir/${{ env.SRCDIR }}"
           CARGO_HOME="$build1dir" cargo build --release --frozen --features all
           # Also test dist-server feature specifically (if not in 'all')
           CARGO_HOME="$build2dir" cargo build --release --frozen --no-default-features --features dist-server
