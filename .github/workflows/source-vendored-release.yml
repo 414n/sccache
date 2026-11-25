@@ -48,10 +48,10 @@ jobs:
 
       - name: Create tarball
         run: |
-          tar --exclude="${{ env.SRCDIR }}/.git" \
-            --exclude="${{ env.SRCDIR }}/target" \
-            -cJvf "${{ env.TAR }}" \
-            "${{ env.SRCDIR }}" || { echo "Failed to create tarball"; exit 1; }
+          tar --exclude="$SRCDIR/.git" \
+            --exclude="$SRCDIR/target" \
+            -cJvf "$TAR" \
+            "$SRCDIR" || { echo "Failed to create tarball"; exit 1; }
 
       - name: Test offline build with vendored source tarball (--frozen option)
         run: |
@@ -62,7 +62,7 @@ jobs:
           trap 'rm -rf $tmpdir' EXIT
           mkdir -p "$srcdir" "$build1dir" "$build2dir"
           tar -xf "${{ github.workspace }}/${{ env.TAR }}" -C "$srcdir"
-          cd "$srcdir/${{ env.SRCDIR }}"
+          cd "$srcdir/$SRCDIR"
           CARGO_HOME="$build1dir" cargo build --release --frozen --features all
           # Also test dist-server feature specifically (if not in 'all')
           CARGO_HOME="$build2dir" cargo build --release --frozen --no-default-features --features dist-server
