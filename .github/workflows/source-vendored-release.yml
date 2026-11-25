@@ -27,7 +27,8 @@ jobs:
       - name: Validate release tag
         shell: bash
         run: |
-          if [[ ! "$TAG" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]]; then
+          if ! git show-ref --verify --quiet "refs/tags/$TAG"
+          then
             echo "Invalid release tag: $TAG" >&2
             exit 1
           fi
