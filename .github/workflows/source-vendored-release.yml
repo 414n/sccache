@@ -24,6 +24,13 @@ jobs:
   vendor-and-archive:
     runs-on: ubuntu-latest
     steps:
+      - name: Validate release tag
+        shell: bash
+        run: |
+          if [[ ! "$TAG" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]]; then
+            echo "Invalid release tag: $TAG" >&2
+            exit 1
+          fi
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
